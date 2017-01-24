@@ -335,10 +335,10 @@ class TcaCodeGenerator extends AbstractCodeGenerator
                 'requestUpdate' => 'CType'
             ),
             'interface' => array(
-                'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, ',
+                'showRecordFieldList' => 'hidden, ',
             ),
             'types' => array(
-                '1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+                '1' => array('showitem' => 'hidden;;1, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
             ),
             'palettes' => array(
                 '1' => array('showitem' => ''),
@@ -347,16 +347,19 @@ class TcaCodeGenerator extends AbstractCodeGenerator
                 'sys_language_uid' => array(
                     'exclude' => 1,
                     'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
-                    'config' => array(
+                    'config' => [
                         'type' => 'select',
                         'renderType' => 'selectSingle',
-                        'foreign_table' => 'sys_language',
-                        'foreign_table_where' => 'ORDER BY sys_language.title',
-                        'items' => array(
-                            array('LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages', -1),
-                            array('LLL:EXT:lang/locallang_general.xlf:LGL.default_value', 0)
-                        ),
-                    ),
+                        'special' => 'languages',
+                        'items' => [
+                            [
+                                'LLL:EXT:lang/locallang_general.xlf:LGL.allLanguages',
+                                -1,
+                                'flags-multiple'
+                            ],
+                        ],
+                        'default' => 0,
+                    ]
                 ),
                 'l10n_parent' => array(
                     'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -454,7 +457,7 @@ class TcaCodeGenerator extends AbstractCodeGenerator
         $generalUtility = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('MASK\\Mask\\Utility\\GeneralUtility');
 
         // now add all the fields that should be shown
-        $prependTabs = "sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, ";
+        $prependTabs = "hidden;;1, ";
         if ($tca) {
             $i = 0;
             foreach ($tca as $fieldKey => $configuration) {
@@ -490,7 +493,7 @@ class TcaCodeGenerator extends AbstractCodeGenerator
         $tableTca["ctrl"]["title"] = $table;
         $tableTca["ctrl"]["label"] = $labelField;
         $tableTca["ctrl"]["searchFields"] = implode(",", $fields);
-        $tableTca["interface"]["showRecordFieldList"] = "sys_language_uid, l10n_parent, l10n_diffsource, hidden, " . implode(", ", $fields);
+        $tableTca["interface"]["showRecordFieldList"] = "hidden, " . implode(", ", $fields);
         $tableTca["types"]["1"]["showitem"] = $prependTabs . implode(", ", $fields) . ", --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime";
 
         $tableTca["columns"]["l10n_parent"]["config"]["foreign_table"] = $table;

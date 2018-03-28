@@ -136,13 +136,15 @@ class InlineHelper
         if (!$childTable) {
             $childTable = $name;
         }
-        
+
+        // Use language of parent record because parent and child languages do match.
+        // With this fix the usage of "sys_language_mode = content_fallback" should work as expected.
+        $sysLangUid = $data['sys_language_uid'];
+
         // If this method is called in backend, there is no $GLOBALS['TSFE']
         if (isset($GLOBALS['TSFE']->sys_language_uid)) {
-            $sysLangUid = $GLOBALS['TSFE']->sys_language_uid;
             $enableFields = $GLOBALS['TSFE']->cObj->enableFields($childTable);
         } else {
-            $sysLangUid = 0;
             $enableFields = " AND " . $childTable . ".deleted = 0";
         }
 
